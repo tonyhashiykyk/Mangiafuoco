@@ -61,9 +61,9 @@
     white-space:nowrap; font-size:64px;
   }
   @media (max-width:640px){
-    #brandLogo{ height:160px; left:12px; top:10px; }
-    #brandLogoText{ font-size:36px; }
-    #siteHeader .grid{ height:64px; }
+    #brandLogo{ height:100px; left:10px; top:8px; }
+    #brandLogoText{ font-size:28px; }
+    #siteHeader .grid{ height:56px; }
   }
 
   /* ---- HEADER ---- */
@@ -97,9 +97,9 @@
   /* ---- HERO BG ---- */
   .hero-bg{
     background-image:
-      linear-gradient(180deg, rgba(23,17,13,.55), rgba(23,17,13,.85)),
+      linear-gradient(180deg, rgba(23,17,13,.7) 0%, rgba(23,17,13,.3) 40%, rgba(23,17,13,.7) 100%),
       url('https://raw.githubusercontent.com/tonyhashiykyk/Mangiafuoco/main/Screenshot%202026-07-08%20alle%2001.57.49.png');
-    background-size: cover; background-position:center;
+    background-size: cover; background-position: center center;
   }
 
   /* ---- REVEAL: visibile di default, il JS aggiunge l'animazione solo se supportata ---- */
@@ -136,7 +136,7 @@
 
 <!-- ============ HEADER ============ -->
 <header id="siteHeader" class="fixed top-0 left-0 w-full z-50">
-  <div class="max-w-7xl mx-auto px-5 h-[80px] grid grid-cols-3 items-center">
+  <div class="max-w-7xl mx-auto px-5 h-[56px] sm:h-[80px] grid grid-cols-3 items-center">
     <!-- sinistra: spazio per bilanciare il logo morphing -->
     <div></div>
 
@@ -170,14 +170,14 @@
 <!-- ============ HERO ============ -->
 <section id="top" class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center px-6">
   <!-- lo spazio in alto ospita il logo (fixed) nella sua posizione hero -->
-  <div class="mt-[18vh] sm:mt-[26vh]"></div>
+  <div class="mt-[14vh] sm:mt-[26vh]"></div>
 
 
-  <h1 class="font-hero text-cream text-5xl sm:text-7xl leading-[0.95] mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
+  <h1 class="font-hero text-cream text-3xl sm:text-5xl md:text-7xl leading-[0.95] mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
 
   <div class="flex flex-col sm:flex-row gap-3 mb-8">
-    <a href="#menu" class="bg-fire text-cream font-type uppercase tracking-widest text-sm px-7 py-3 rounded-full hover:bg-[#8b2a2a] transition-colors" data-i18n="cta_menu">Vedi il menu</a>
-    <a href="#contatti" class="border border-cream/40 text-cream font-type uppercase tracking-widest text-sm px-7 py-3 rounded-full hover:bg-cream/10 transition-colors" data-i18n="cta_book">Prenota un tavolo</a>
+    <a href="#menu" class="bg-fire text-cream font-type uppercase tracking-widest text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3 rounded-full hover:bg-[#8b2a2a] transition-colors" data-i18n="cta_menu">Vedi il menu</a>
+    <a href="#contatti" class="border border-cream/40 text-cream font-type uppercase tracking-widest text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3 rounded-full hover:bg-cream/10 transition-colors" data-i18n="cta_book">Prenota un tavolo</a>
   </div>
 
   <div class="flex items-center gap-2 text-gold/90">
@@ -584,7 +584,7 @@ try {
   function measure(){
     heroW = logo.offsetWidth || 200;
     const heroH = logo.offsetHeight || 180;
-    const headerH = isMob() ? 42 : 56;
+    const headerH = isMob() ? 36 : 56;
     headerScale = headerH / heroH;
   }
 
