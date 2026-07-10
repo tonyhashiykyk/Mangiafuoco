@@ -61,9 +61,8 @@
     white-space:nowrap; font-size:64px;
   }
   @media (max-width:640px){
-    #brandLogo{ height:100px; left:10px; top:8px; }
-    #brandLogoText{ font-size:28px; }
-    #siteHeader .grid{ height:56px; }
+    #brandLogo{ height:70px; left:8px; top:6px; }
+    #brandLogoText{ font-size:22px; }
   }
 
   /* ---- HEADER ---- */
@@ -136,11 +135,11 @@
 
 <!-- ============ HEADER ============ -->
 <header id="siteHeader" class="fixed top-0 left-0 w-full z-50">
-  <div class="max-w-7xl mx-auto px-5 h-[56px] sm:h-[80px] grid grid-cols-3 items-center">
-    <!-- sinistra: spazio per bilanciare il logo morphing -->
-    <div></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-5 h-[48px] sm:h-[80px] flex items-center justify-end md:grid md:grid-cols-3">
+    <!-- sinistra: spazio per bilanciare il logo morphing (desktop only) -->
+    <div class="hidden md:block"></div>
 
-    <!-- centro: nav -->
+    <!-- centro: nav (desktop only) -->
     <nav id="navLinks" class="hidden md:flex justify-center gap-9 font-type uppercase tracking-[0.22em] text-[13px] text-cream">
       <a href="#storia"     class="hover:text-gold transition-colors" data-i18n="nav_story">Storia</a>
       <a href="#menu"       class="hover:text-gold transition-colors" data-i18n="nav_menu">Menu</a>
@@ -151,7 +150,7 @@
     <!-- destra: prenota + burger -->
     <div class="flex items-center justify-end gap-3">
       <a id="headerBook" href="#contatti" class="hidden sm:inline-block bg-fire text-cream font-type uppercase tracking-widest text-[12px] px-4 py-2 rounded-full hover:bg-[#8b2a2a] transition-colors opacity-0" data-i18n="cta_book_short">Prenota</a>
-      <button id="burger" class="md:hidden text-cream" aria-label="Menu"><i data-lucide="menu"></i></button>
+      <button id="burger" class="md:hidden text-cream" aria-label="Menu"><i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
     </div>
   </div>
 
@@ -173,7 +172,7 @@
   <div class="mt-[14vh] sm:mt-[26vh]"></div>
 
 
-  <h1 class="font-hero text-cream text-3xl sm:text-5xl md:text-7xl leading-[0.95] mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
+  <h1 class="font-hero text-cream text-2xl sm:text-5xl md:text-7xl leading-[0.95] mb-6 sm:mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
 
   <div class="flex flex-col sm:flex-row gap-3 mb-8">
     <a href="#menu" class="bg-fire text-cream font-type uppercase tracking-widest text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3 rounded-full hover:bg-[#8b2a2a] transition-colors" data-i18n="cta_menu">Vedi il menu</a>
@@ -182,13 +181,13 @@
 
   <div class="flex items-center gap-2 text-gold/90">
     <div class="flex gap-0.5">
-      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
-      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
-      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
-      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
-      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-3 h-3 sm:w-4 sm:h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-3 h-3 sm:w-4 sm:h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-3 h-3 sm:w-4 sm:h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-3 h-3 sm:w-4 sm:h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-3 h-3 sm:w-4 sm:h-4 fill-gold text-gold"></i>
     </div>
-    <span class="text-cream/70 text-sm" data-i18n="hero_rating">Travellers' Choice · 509 recensioni</span>
+    <span class="text-cream/70 text-xs sm:text-sm" data-i18n="hero_rating">Travellers' Choice · 509 recensioni</span>
   </div>
 
   <a href="#storia" class="absolute bottom-7 left-1/2 -translate-x-1/2 text-gold/80 animate-bounce" aria-label="Scorri">
@@ -584,7 +583,7 @@ try {
   function measure(){
     heroW = logo.offsetWidth || 200;
     const heroH = logo.offsetHeight || 180;
-    const headerH = isMob() ? 36 : 56;
+    const headerH = isMob() ? 28 : 56;
     headerScale = headerH / heroH;
   }
 
