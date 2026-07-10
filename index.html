@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mangiafuoco RistoBeef & Wine — Braceria a Bari</title>
+<meta name="description" content="Mangiafuoco RistoBeef & Wine — la casa del fuoco buono a Bari. Carni locali cotte su brace a carboni, antipasti freschi e grande selezione di vini.">
+
+<!-- ============ TAILWIND (CDN) ============ -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          gold:  '#b8744a',   /* rame caldo — eyebrow, filetti, accenti */
+          fire:  '#6e1f24',   /* bordeaux — sezioni rosse (recensioni) */
+          ink:   '#17110d',   /* carbone caldo — base scura */
+          cream: '#f2ebde',   /* osso caldo — testo su fondo scuro */
+          wine:  '#e0562a',   /* ember — prezzi / pop caldo su scuro */
+          ember: '#e0562a'
+        },
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          hero:    ['Fraunces', 'serif'],
+          type:    ['"Space Mono"', 'monospace'],
+          body:    ['Figtree', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+
+<!-- ============ FONTS ============ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Figtree:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- ============ LUCIDE ============ -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Figtree', sans-serif; background:#17110d; color:#f2ebde; overflow-x:hidden; }
+
+  /* ---- LOGO MORPHING (hero -> header) ---- */
+  #brandLogo{
+    position: fixed;
+    left: 22px; top: 15px;           /* punto di aggancio nell'header */
+    height: 180px;                    /* dimensione HERO (grande, nitida) */
+    z-index: 60;
+    transform-origin: top left;
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+  }
+  #brandLogoText{                     /* fallback testuale se l'immagine non carica */
+    display:none;
+    font-family:'Fraunces',serif; font-weight:900;
+    color:#b8744a; letter-spacing:.01em; line-height:.9;
+    white-space:nowrap; font-size:64px;
+  }
+  @media (max-width:640px){
+    #brandLogo{ height:160px; left:12px; top:10px; }
+    #brandLogoText{ font-size:36px; }
+    #siteHeader .grid{ height:64px; }
+  }
+
+  /* ---- HEADER ---- */
+  #siteHeader{ transition: background-color .25s ease, backdrop-filter .25s ease; }
+  #navLinks{ opacity:0; transition: opacity .4s ease; }
+
+  /* ---- MARQUEE ---- */
+  .marquee-mask{ overflow:hidden; white-space:nowrap; }
+  .marquee-track{ display:inline-flex; will-change:transform; animation: marquee 26s linear infinite; }
+  @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+
+  /* ---- PARALLAX (JS-driven on mobile, CSS on desktop) ---- */
+  .parallax{
+    background-size: cover; background-position: center;
+    overflow: hidden; position: relative;
+  }
+  /* desktop: CSS fixed attachment */
+  @media (min-width:769px){
+    .parallax{ background-attachment: fixed; }
+  }
+  /* mobile: the bg is moved to a pseudo-child so JS can translateY it */
+  @media (max-width:768px){
+    .parallax{ background-image:none !important; }
+    .parallax-bg{
+      position:absolute; inset:-30% 0; z-index:0;
+      background-size:cover; background-position:center;
+      will-change:transform;
+    }
+  }
+
+  /* ---- HERO BG ---- */
+  .hero-bg{
+    background-image:
+      linear-gradient(180deg, rgba(23,17,13,.55), rgba(23,17,13,.85)),
+      url('https://raw.githubusercontent.com/tonyhashiykyk/Mangiafuoco/main/Screenshot%202026-07-08%20alle%2001.57.49.png');
+    background-size: cover; background-position:center;
+  }
+
+  /* ---- REVEAL: visibile di default, il JS aggiunge l'animazione solo se supportata ---- */
+  .reveal{ opacity:1; transform:none; }
+  .reveal.js-anim{ opacity:0; transform:translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.js-anim.in{ opacity:1; transform:none; }
+
+  /* ---- form underline ---- */
+  .field{ background:transparent; border:0; border-bottom:1px solid rgba(201,138,60,.4); color:#f2ebde; }
+  .field:focus{ outline:none; border-bottom-color:#b8744a; }
+  .field option{ background:#17110d; color:#f2ebde; }
+
+  ::selection{ background:#6e1f24; color:#f2ebde; }
+  @media (prefers-reduced-motion: reduce){
+    .marquee-track{ animation:none; }
+    .reveal.js-anim{ transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ============ LOGO MORPHING (elemento fisso unico) ============ -->
+<a href="#top" id="brandLogo" aria-label="Mangiafuoco — home">
+  <!-- ⚠️ Sostituisci con il raw URL GitHub del logo del cliente (PNG trasparente alta risoluzione) -->
+  <img id="brandLogoImg"
+       src="https://raw.githubusercontent.com/tonyhashiykyk/Mangiafuoco/main/logo_v3.png"
+       alt="Mangiafuoco RistoBeef & Wine"
+       style="height:100%;width:auto;display:block"
+       onerror="this.style.display='none';document.getElementById('brandLogoText').style.display='block';">
+  <span id="brandLogoText">MANGIAFUOCO</span>
+</a>
+
+<!-- ============ HEADER ============ -->
+<header id="siteHeader" class="fixed top-0 left-0 w-full z-50">
+  <div class="max-w-7xl mx-auto px-5 h-[80px] grid grid-cols-3 items-center">
+    <!-- sinistra: spazio per bilanciare il logo morphing -->
+    <div></div>
+
+    <!-- centro: nav -->
+    <nav id="navLinks" class="hidden md:flex justify-center gap-9 font-type uppercase tracking-[0.22em] text-[13px] text-cream">
+      <a href="#storia"     class="hover:text-gold transition-colors" data-i18n="nav_story">Storia</a>
+      <a href="#menu"       class="hover:text-gold transition-colors" data-i18n="nav_menu">Menu</a>
+      <a href="#recensioni" class="hover:text-gold transition-colors" data-i18n="nav_reviews">Recensioni</a>
+      <a href="#contatti"   class="hover:text-gold transition-colors" data-i18n="nav_contact">Contatti</a>
+    </nav>
+
+    <!-- destra: prenota + burger -->
+    <div class="flex items-center justify-end gap-3">
+      <a id="headerBook" href="#contatti" class="hidden sm:inline-block bg-fire text-cream font-type uppercase tracking-widest text-[12px] px-4 py-2 rounded-full hover:bg-[#8b2a2a] transition-colors opacity-0" data-i18n="cta_book_short">Prenota</a>
+      <button id="burger" class="md:hidden text-cream" aria-label="Menu"><i data-lucide="menu"></i></button>
+    </div>
+  </div>
+
+  <!-- menu mobile -->
+  <div id="mobileMenu" class="hidden md:hidden bg-ink/95 backdrop-blur border-t border-gold/20">
+    <div class="flex flex-col px-6 py-4 gap-4 font-type uppercase tracking-widest text-cream text-sm">
+      <a href="#storia"     class="mobile-link" data-i18n="nav_story">Storia</a>
+      <a href="#menu"       class="mobile-link" data-i18n="nav_menu">Menu</a>
+      <a href="#recensioni" class="mobile-link" data-i18n="nav_reviews">Recensioni</a>
+      <a href="#contatti"   class="mobile-link" data-i18n="nav_contact">Contatti</a>
+
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="top" class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center px-6">
+  <!-- lo spazio in alto ospita il logo (fixed) nella sua posizione hero -->
+  <div class="mt-[18vh] sm:mt-[26vh]"></div>
+
+
+  <h1 class="font-hero text-cream text-5xl sm:text-7xl leading-[0.95] mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
+
+  <div class="flex flex-col sm:flex-row gap-3 mb-8">
+    <a href="#menu" class="bg-fire text-cream font-type uppercase tracking-widest text-sm px-7 py-3 rounded-full hover:bg-[#8b2a2a] transition-colors" data-i18n="cta_menu">Vedi il menu</a>
+    <a href="#contatti" class="border border-cream/40 text-cream font-type uppercase tracking-widest text-sm px-7 py-3 rounded-full hover:bg-cream/10 transition-colors" data-i18n="cta_book">Prenota un tavolo</a>
+  </div>
+
+  <div class="flex items-center gap-2 text-gold/90">
+    <div class="flex gap-0.5">
+      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+    </div>
+    <span class="text-cream/70 text-sm" data-i18n="hero_rating">Travellers' Choice · 509 recensioni</span>
+  </div>
+
+  <a href="#storia" class="absolute bottom-7 left-1/2 -translate-x-1/2 text-gold/80 animate-bounce" aria-label="Scorri">
+    <i data-lucide="chevron-down" class="w-7 h-7"></i>
+  </a>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="bg-ink border-y border-gold/20 py-3 marquee-mask">
+  <div class="marquee-track font-type uppercase tracking-[0.25em] text-gold text-sm">
+    <span>MANGIAFUOCO&nbsp;&nbsp;✦&nbsp;&nbsp;RISTOBEEF & WINE&nbsp;&nbsp;✦&nbsp;&nbsp;BRACE A CARBONI&nbsp;&nbsp;✦&nbsp;&nbsp;CARNI LOCALI&nbsp;&nbsp;✦&nbsp;&nbsp;FAMIGLIA ATTOLICO DAGLI ANNI '50&nbsp;&nbsp;✦&nbsp;&nbsp;BARI&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+    <span>MANGIAFUOCO&nbsp;&nbsp;✦&nbsp;&nbsp;RISTOBEEF & WINE&nbsp;&nbsp;✦&nbsp;&nbsp;BRACE A CARBONI&nbsp;&nbsp;✦&nbsp;&nbsp;CARNI LOCALI&nbsp;&nbsp;✦&nbsp;&nbsp;FAMIGLIA ATTOLICO DAGLI ANNI '50&nbsp;&nbsp;✦&nbsp;&nbsp;BARI&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- ============ PARALLAX 1 ============ -->
+<section class="parallax relative min-h-[55vh] sm:min-h-[70vh] flex items-center justify-center text-center px-6"
+         style="background-image:url('https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1900&q=80');">
+  <div class="parallax-bg hidden" style="background-image:url('https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1200&q=75');"></div>
+  <div class="absolute inset-0 bg-ink/45 z-[1]"></div>
+  <div class="relative z-[2] reveal">
+    <p class="font-type uppercase tracking-[0.3em] text-gold text-xs mb-3" data-i18n="px1_eyebrow">La brace è protagonista</p>
+    <h2 class="font-display text-cream text-4xl sm:text-6xl uppercase" data-i18n="px1_title">Cottura sul carbone</h2>
+    <p class="text-cream/70 mt-3 max-w-lg mx-auto" data-i18n="px1_sub">Ogni taglio rispettato alla perfezione, come vuole la tradizione.</p>
+  </div>
+</section>
+
+<!-- ============ STORIA ============ -->
+<section id="storia" class="bg-cream text-ink py-16 sm:py-24 px-6">
+  <div class="max-w-4xl mx-auto text-center reveal">
+    <p class="font-type uppercase tracking-[0.3em] text-fire text-xs mb-4" data-i18n="story_eyebrow">La storia</p>
+    <h2 class="font-display text-4xl sm:text-5xl uppercase mb-6" data-i18n="story_title">Non la classica braceria</h2>
+    <p class="text-ink/80 text-lg leading-relaxed mb-4" data-i18n="story_p1">Mangiafuoco è la casa del fuoco buono e della convivialità sincera, nata dalla passione di Donato e Angela Attolico. Una famiglia nel mondo delle carni fin dagli anni '50, quando erano macellai.</p>
+    <p class="text-ink/70 leading-relaxed" data-i18n="story_p2">Carni locali eccellenti cotte rigorosamente su brace a carboni, antipasti e contorni sempre freschi — mai semilavorati o surgelati — e un'incredibile selezione di vini, grappe e rum, in un ambiente caldo e accogliente.</p>
+    <div class="w-16 h-px bg-fire/40 mx-auto mt-8"></div>
+  </div>
+</section>
+
+<!-- ============ PARALLAX 2 ============ -->
+<section class="parallax relative min-h-[55vh] sm:min-h-[70vh] flex items-center justify-center text-center px-6"
+         style="background-image:url('https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=1900&q=80');">
+  <div class="parallax-bg hidden" style="background-image:url('https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=1200&q=75');"></div>
+  <div class="absolute inset-0 bg-ink/45 z-[1]"></div>
+  <div class="relative z-[2] reveal">
+    <p class="font-type uppercase tracking-[0.3em] text-gold text-xs mb-3" data-i18n="px2_eyebrow">Selezione &amp; frollatura</p>
+    <h2 class="font-display text-cream text-4xl sm:text-6xl uppercase" data-i18n="px2_title">Carni d'eccellenza</h2>
+    <p class="text-cream/70 mt-3 max-w-lg mx-auto" data-i18n="px2_sub">Dalla Rubia Gallega al Wagyu A5, fino alle frollature Leonardo Attolica.</p>
+  </div>
+</section>
+
+<!-- ============ MENU ============ -->
+<section id="menu" class="bg-ink py-16 sm:py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center reveal mb-14">
+      <p class="font-type uppercase tracking-[0.3em] text-gold text-xs mb-3" data-i18n="menu_eyebrow">Il menu</p>
+      <h2 class="font-display text-cream text-4xl sm:text-5xl uppercase" data-i18n="menu_title">Dalla brace alla tavola</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-x-14 gap-y-12 reveal">
+
+      <!-- ANTIPASTO CRUDO -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_crudo">Antipasto crudo</h3>
+        <ul class="space-y-4">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Tartare di filetto</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 11</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Tartare Mangiafuoco</p><p class="text-cream/55 text-sm">Ossobuco, affumicatura, olio evo</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 18</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Tartare Mangiafuoco flambé</p><p class="text-cream/55 text-sm">Affumicatura, uovo di quaglia</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 13</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Carpaccio di manzo</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 11</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Carne salada</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 11</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Salsiccia cruda</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 8</span></li>
+        </ul>
+      </div>
+
+      <!-- ANTIPASTI -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_antipasti">Antipasti</h3>
+        <ul class="space-y-4">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Capocollo di Martina Franca</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 8</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Selezione salumi</p><p class="text-cream/55 text-sm">Martina Franca</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 15</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Bombette alla martinese</p><p class="text-cream/55 text-sm">Con caciocavallo</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 10</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Crostini gourmet</p><p class="text-cream/55 text-sm">Uova di quaglia, acciughe del Cantabrico, peperone crusco</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 18</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Straccetti croccanti di maiale</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 12</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Brasciola alla barese</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 7</span></li>
+        </ul>
+      </div>
+
+      <!-- SPECIALITÀ -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_special">Specialità · su ordinazione</h3>
+        <ul class="space-y-4">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Rubia Gallega</p><p class="text-cream/55 text-sm">All'etto</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 8,50</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Chateaubriand</p><p class="text-cream/55 text-sm">All'etto · min. 1kg</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 10</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Wagyu A5 Japan</p><p class="text-cream/55 text-sm">All'etto · min. 250g</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 38</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Carrè di agnello</p><p class="text-cream/55 text-sm">Per 2</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 35</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Filetto alla Wellington</p><p class="text-cream/55 text-sm">Per 2</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 60</span></li>
+        </ul>
+      </div>
+
+      <!-- PIATTI DI CARNE -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_carne">Piatti di carne</h3>
+        <ul class="space-y-4">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Entrecôte classica</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 15</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Entrecôte ai porcini</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 18</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Maxi tagliata classica</p><p class="text-cream/55 text-sm">Pomodorini, rucola, grana</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 25</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Filet mignon</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 16</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Ribs di maiale BBQ</p><p class="text-cream/55 text-sm">Con patate</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 12</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Galletto alla griglia</p><p class="text-cream/55 text-sm">Con patate</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 12</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Hamburger Apulia</p><p class="text-cream/55 text-sm">Fonduta provola, capocollo, carciofi</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 12</span></li>
+        </ul>
+      </div>
+
+      <!-- POLPETTE SPECIAL -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_polpette">Polpette special</h3>
+        <ul class="space-y-4">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Cacio &amp; pepe</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 10</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Fonduta di provola</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 12</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Pistacchio</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 13</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Tartufo nero</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 14</span></li>
+        </ul>
+      </div>
+
+      <!-- DOLCI + SELEZIONI -->
+      <div>
+        <h3 class="font-type uppercase tracking-widest text-gold text-lg border-b border-gold/30 pb-2 mb-5" data-i18n="cat_dolci">Dolci</h3>
+        <ul class="space-y-4 mb-8">
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Tiramisù</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 6</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Cannolo</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 3,50</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Cannolo scacfazzato</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 5</span></li>
+          <li class="flex justify-between gap-4"><div><p class="font-semibold text-cream">Gourmandise</p><p class="text-cream/55 text-sm">Vari gusti</p></div><span class="text-fire font-semibold whitespace-nowrap">€ 5-6</span></li>
+        </ul>
+        <p class="font-type uppercase tracking-widest text-gold/70 text-xs" data-i18n="cat_frollatura">Selezioni Leonardo Attolica · frollatura min. 90gg</p>
+        <p class="text-cream/60 text-sm mt-2" data-i18n="frollatura_list">Chianina · Danese · Prussiana · Simmenthal · Angus USA — € 7 all'etto</p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-14 reveal">
+      <a href="https://www.thefork.it/ristorante/braceria-mangiafuoco-bari-r839863" target="_blank" rel="noopener"
+         class="inline-block bg-fire text-cream font-type uppercase tracking-widest text-sm px-8 py-3 rounded-full hover:bg-[#8b2a2a] transition-colors" data-i18n="menu_full">Scopri il menu completo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECENSIONI ============ -->
+<section id="recensioni" class="bg-ink py-20 sm:py-28 px-6 relative overflow-hidden">
+  <!-- subtle radial glow -->
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 50% 0%, rgba(110,31,36,.18) 0%, transparent 65%);"></div>
+
+  <div class="max-w-5xl mx-auto relative">
+
+    <!-- header -->
+    <div class="text-center reveal mb-20">
+      <p class="font-type uppercase tracking-[0.4em] text-gold/70 text-[11px] mb-5">Travellers' Choice · 509 recensioni</p>
+      <h2 class="font-display text-cream text-4xl sm:text-5xl italic" data-i18n="rev_title">Cosa dicono di noi</h2>
+      <div class="flex justify-center gap-1.5 mt-5">
+        <i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i><i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i><i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i><i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i><i data-lucide="star" class="w-4 h-4 fill-gold text-gold"></i>
+      </div>
+    </div>
+
+    <!-- featured quote -->
+    <div class="reveal mb-16 text-center max-w-3xl mx-auto">
+      <svg class="w-10 h-10 text-fire/60 mx-auto mb-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7.1c-1.2.5-2.1 1.1-2.8 1.9-.7.8-1.2 1.7-1.3 2.6h1.7c1.3 0 2.4 1.1 2.4 2.4v2.6c0 1.3-1.1 2.4-2.4 2.4H6.2c-1.3 0-2.4-1.1-2.4-2.4v-3.1c0-2.1.7-4 2.1-5.5C7.3 5.5 9.2 4.6 11 4.3V7.1zm9.8 0c-1.2.5-2.1 1.1-2.8 1.9-.7.8-1.2 1.7-1.3 2.6h1.7c1.3 0 2.4 1.1 2.4 2.4v2.6c0 1.3-1.1 2.4-2.4 2.4H16c-1.3 0-2.4-1.1-2.4-2.4v-3.1c0-2.1.7-4 2.1-5.5 1.4-1.5 3.3-2.4 5.1-2.7V7.1z"/></svg>
+      <p class="font-display text-cream text-xl sm:text-2xl leading-relaxed italic mb-6" data-i18n="rev3">Molto più di una braceria: è davvero la casa del fuoco buono. Ogni dettaglio racconta cura e passione, con la brace assoluta protagonista.</p>
+      <div class="w-12 h-px bg-gold/40 mx-auto mb-4"></div>
+      <p class="font-type uppercase tracking-[0.3em] text-gold text-[11px]">Antonio · TheFork</p>
+    </div>
+
+    <!-- divider -->
+    <div class="w-full h-px bg-gradient-to-r from-transparent via-gold/25 to-transparent mb-16"></div>
+
+    <!-- review grid: 2 col stacked, minimal -->
+    <div class="grid md:grid-cols-2 gap-x-16 gap-y-12 reveal">
+
+      <div class="relative pl-6 border-l-2 border-fire/50">
+        <p class="text-cream/85 italic leading-relaxed mb-4" data-i18n="rev1">"Carne di altissimo livello, locale intimo e riservato. La cottura è rispettata alla perfezione e la carta dei vini è davvero ampia. Per chi cerca qualità, è il posto giusto."</p>
+        <div class="flex items-center gap-3">
+          <div class="flex gap-0.5">
+            <i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i>
+          </div>
+          <span class="text-cream/50 text-[10px]">—</span>
+          <p class="font-type uppercase tracking-[0.25em] text-gold/70 text-[10px]">Marco · Google</p>
+        </div>
+      </div>
+
+      <div class="relative pl-6 border-l-2 border-fire/50">
+        <p class="text-cream/85 italic leading-relaxed mb-4" data-i18n="rev2">"La tartare Mangiafuoco è stata indimenticabile e la Fiorentina fantastica. Antipasti di carne cruda eccellenti. Torneremo sicuramente."</p>
+        <div class="flex items-center gap-3">
+          <div class="flex gap-0.5">
+            <i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i>
+          </div>
+          <span class="text-cream/50 text-[10px]">—</span>
+          <p class="font-type uppercase tracking-[0.25em] text-gold/70 text-[10px]">Giulia · TripAdvisor</p>
+        </div>
+      </div>
+
+      <div class="relative pl-6 border-l-2 border-fire/50">
+        <p class="text-cream/85 italic leading-relaxed mb-4" data-i18n="rev4">"Ottima qualità delle carni, cottura e presentazione curate. Location intima e accogliente: consiglio gli straccetti."</p>
+        <div class="flex items-center gap-3">
+          <div class="flex gap-0.5">
+            <i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 text-gold/30 fill-gold/20"></i>
+          </div>
+          <span class="text-cream/50 text-[10px]">—</span>
+          <p class="font-type uppercase tracking-[0.25em] text-gold/70 text-[10px]">Francesca · Google</p>
+        </div>
+      </div>
+
+      <div class="relative pl-6 border-l-2 border-fire/50">
+        <p class="text-cream/85 italic leading-relaxed mb-4" data-i18n="rev5">"Il posto giusto per trovare carne sopraffina. Personale cordiale e professionale, titolare sempre disponibile."</p>
+        <div class="flex items-center gap-3">
+          <div class="flex gap-0.5">
+            <i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i><i data-lucide="star" class="w-3 h-3 fill-gold text-gold"></i>
+          </div>
+          <span class="text-cream/50 text-[10px]">—</span>
+          <p class="font-type uppercase tracking-[0.25em] text-gold/70 text-[10px]">Davide · TripAdvisor</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- score badge -->
+    <div class="reveal mt-16 flex flex-col sm:flex-row items-center justify-center gap-8">
+      <div class="flex items-baseline gap-2">
+        <span class="font-display text-fire text-6xl">7,8</span>
+        <span class="text-cream/50 text-xl">/10</span>
+      </div>
+      <div class="h-10 w-px bg-gold/20 hidden sm:block"></div>
+      <div class="text-center sm:text-left">
+        <p class="text-cream/80 text-sm" data-i18n="rev_score">198 recensioni su TheFork</p>
+        <p class="font-type uppercase tracking-[0.3em] text-gold/50 text-[10px] mt-1">Travellers' Choice</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ CONTATTI + FORM ============ -->
+<section id="contatti" class="bg-ink py-16 sm:py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center reveal mb-14">
+      <p class="font-type uppercase tracking-[0.3em] text-gold text-xs mb-3" data-i18n="contact_eyebrow">Vieni a trovarci</p>
+      <h2 class="font-display text-cream text-4xl sm:text-5xl uppercase" data-i18n="contact_title">Prenota un tavolo</h2>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8 items-stretch reveal">
+
+      <!-- SINISTRA: info + mappa -->
+      <div class="flex flex-col h-full gap-6">
+        <div class="space-y-5">
+          <div class="flex items-start gap-3">
+            <i data-lucide="map-pin" class="w-5 h-5 text-gold mt-0.5"></i>
+            <p class="text-cream/85">Viale del Concilio Vaticano II, 152<br>70124 Bari (BA)</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <i data-lucide="clock" class="w-5 h-5 text-gold mt-0.5"></i>
+            <p class="text-cream/85"><span data-i18n="hours">Lunedì–Sabato · 20:00–00:45</span><br><span class="text-cream/55" data-i18n="hours_closed">Domenica chiuso</span></p>
+          </div>
+          <div class="flex items-start gap-3">
+            <i data-lucide="phone" class="w-5 h-5 text-gold mt-0.5"></i>
+            <p class="text-cream/85">080 561 3325 · 338 330 8313</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="tel:+390805613325" class="flex-1 flex items-center justify-center gap-2 border border-cream/30 text-cream font-type uppercase tracking-widest text-xs px-5 py-3 rounded-full hover:bg-cream/10 transition-colors">
+            <i data-lucide="phone" class="w-4 h-4"></i><span data-i18n="btn_call">Chiama ora</span>
+          </a>
+          <a href="https://wa.me/393383308313" target="_blank" rel="noopener" class="flex-1 flex items-center justify-center gap-2 bg-fire text-cream font-type uppercase tracking-widest text-xs px-5 py-3 rounded-full hover:bg-[#8b2a2a] transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+
+        <div class="flex-1 min-h-[280px] rounded-2xl overflow-hidden border border-gold/20">
+          <iframe title="Mappa Mangiafuoco" class="w-full h-full min-h-[280px]" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Viale+del+Concilio+Vaticano+II+152,+70124+Bari+BA&output=embed"></iframe>
+        </div>
+      </div>
+
+      <!-- DESTRA: form -->
+      <div class="flex h-full">
+        <div class="w-full bg-black/30 border border-gold/20 rounded-2xl overflow-hidden flex flex-col">
+          <div class="bg-fire px-6 py-4">
+            <h3 class="font-type uppercase tracking-widest text-cream text-sm" data-i18n="form_title">Richiedi la tua prenotazione</h3>
+          </div>
+          <div class="p-6 flex-1 flex flex-col gap-5">
+            <div>
+              <label class="font-type uppercase tracking-widest text-gold/70 text-[11px]" data-i18n="form_name">Nome</label>
+              <input id="f_name" type="text" class="field w-full py-2 mt-1" placeholder="Mario Rossi">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="font-type uppercase tracking-widest text-gold/70 text-[11px]" data-i18n="form_date">Data</label>
+                <input id="f_date" type="date" class="field w-full py-2 mt-1">
+              </div>
+              <div>
+                <label class="font-type uppercase tracking-widest text-gold/70 text-[11px]" data-i18n="form_time">Orario</label>
+                <select id="f_time" class="field w-full py-2 mt-1">
+                  <option>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option><option>22:00</option><option>22:30</option><option>23:00</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="font-type uppercase tracking-widest text-gold/70 text-[11px]" data-i18n="form_people">Persone</label>
+              <select id="f_people" class="field w-full py-2 mt-1">
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+              </select>
+            </div>
+            <div>
+              <label class="font-type uppercase tracking-widest text-gold/70 text-[11px]" data-i18n="form_notes">Note</label>
+              <input id="f_notes" type="text" class="field w-full py-2 mt-1" placeholder="Allergie, occasioni speciali…">
+            </div>
+            <button id="f_submit" class="mt-auto bg-fire text-cream font-type uppercase tracking-widest text-sm px-6 py-3 rounded-full hover:bg-[#8b2a2a] transition-colors flex items-center justify-center gap-2">
+              <i data-lucide="calendar-check" class="w-4 h-4"></i><span data-i18n="form_submit">Prenota ora</span>
+            </button>
+            <p class="text-cream/40 text-xs text-center" data-i18n="form_hint">La richiesta si aprirà su WhatsApp per la conferma.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-ink border-t border-gold/15 py-12 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col items-center gap-6">
+    <img src="https://raw.githubusercontent.com/tonyhashiykyk/Mangiafuoco/main/logo_v3.png" alt="Mangiafuoco" class="h-12 sm:h-16 w-auto">
+    <div class="flex items-center gap-5 text-cream/70">
+      <a href="https://www.instagram.com/mangiafuoco_ristobeef/" target="_blank" rel="noopener" aria-label="Instagram" class="hover:text-gold transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/Mangiafuocobraceria/" target="_blank" rel="noopener" aria-label="Facebook" class="hover:text-gold transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+      </a>
+      <a href="https://www.thefork.it/ristorante/braceria-mangiafuoco-bari-r839863" target="_blank" rel="noopener" aria-label="TheFork" class="hover:text-gold transition-colors">
+        <i data-lucide="utensils" class="w-5 h-5"></i>
+      </a>
+      <a href="https://glovoapp.com/it/it/bari/stores/mangiafuoco-ristobeef-bar" target="_blank" rel="noopener" aria-label="Glovo / delivery" class="hover:text-gold transition-colors">
+        <i data-lucide="bike" class="w-5 h-5"></i>
+      </a>
+    </div>
+    <p class="text-cream/40 text-xs text-center">© <span id="year"></span> Mangiafuoco RistoBeef & Wine · Famiglia Attolico · Bari</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   Architettura difensiva: ogni blocco isolato in try/catch.
+   Se un blocco fallisce, gli altri (e i contenuti) restano.
+   ========================================================= */
+
+/* ---- LUCIDE ---- */
+try { if (window.lucide) lucide.createIcons(); } catch(e){ console.warn('lucide', e); }
+
+/* ---- ANNO FOOTER ---- */
+try { document.getElementById('year').textContent = new Date().getFullYear(); } catch(e){}
+
+/* ---- MENU MOBILE ---- */
+try {
+  const burger = document.getElementById('burger');
+  const mob = document.getElementById('mobileMenu');
+  if (burger && mob){
+    burger.addEventListener('click', ()=> mob.classList.toggle('hidden'));
+    mob.querySelectorAll('.mobile-link').forEach(a=> a.addEventListener('click', ()=> mob.classList.add('hidden')));
+  }
+} catch(e){ console.warn('mobile menu', e); }
+
+/* ---- REVEAL (progressive enhancement) ---- */
+try {
+  if ('IntersectionObserver' in window){
+    const els = document.querySelectorAll('.reveal');
+    els.forEach(el=> el.classList.add('js-anim'));
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    els.forEach(el=> io.observe(el));
+  }
+} catch(e){ console.warn('reveal', e); }
+
+/* ---- LOGO MORPHING + HEADER ---- */
+try {
+  const logo   = document.getElementById('brandLogo');
+  const header = document.getElementById('siteHeader');
+  const navLinks = document.getElementById('navLinks');
+  const heroFade = document.querySelectorAll('#top h1, #top .flex, #top > .flex');
+  const isMob  = ()=> window.innerWidth < 769;
+  const clamp  = (v,a,b)=> Math.max(a, Math.min(b, v));
+  const lerp   = (a,b,t)=> a + (b-a)*t;
+
+  let heroW = 0, headerScale = 0.30;
+  function measure(){
+    heroW = logo.offsetWidth || 200;
+    const heroH = logo.offsetHeight || 180;
+    const headerH = isMob() ? 42 : 56;
+    headerScale = headerH / heroH;
+  }
+
+  function onScroll(){
+    const y = window.scrollY || window.pageYOffset;
+    const END = isMob() ? 280 : 420;
+    const p = clamp(y / END, 0, 1);
+
+    const anchorX = isMob() ? 12 : 22;
+    const anchorY = isMob() ? 10 : 15;
+    const heroTx = (window.innerWidth - heroW)/2 - anchorX;
+    const heroTy = window.innerHeight * (isMob() ? 0.18 : 0.22) - anchorY;
+
+    const tx = lerp(heroTx, 0, p);
+    const ty = lerp(heroTy, 0, p);
+    const sc = lerp(1, headerScale, p);
+    logo.style.transform = `translate(${tx}px, ${ty}px) scale(${sc})`;
+
+    // header si materializza
+    const a = clamp((p - 0.15) / 0.6, 0, 1);
+    header.style.backgroundColor = `rgba(23,17,13,${(a*0.96).toFixed(3)})`;
+    header.style.backdropFilter  = a > 0.05 ? 'blur(6px)' : 'none';
+
+    // nav + prenota fade-in
+    const navOp = clamp((p - 0.55) / 0.35, 0, 1);
+    if (navLinks) navLinks.style.opacity = navOp;
+    const hBook = document.getElementById('headerBook');
+    if (hBook) hBook.style.opacity = navOp;
+
+    // hero text fade-out
+    heroFade.forEach(el=>{ el.style.opacity = clamp(1 - p*1.8, 0, 1); });
+  }
+
+  let ticking = false;
+  function request(){ if (!ticking){ ticking = true; requestAnimationFrame(()=>{ onScroll(); ticking=false; }); } }
+
+  window.addEventListener('scroll', request, { passive:true });
+  window.addEventListener('resize', ()=>{ measure(); onScroll(); });
+  const img = document.getElementById('brandLogoImg');
+  if (img && !img.complete){ img.addEventListener('load', ()=>{ measure(); onScroll(); }); img.addEventListener('error', ()=>{ measure(); onScroll(); }); }
+  measure(); onScroll();
+  window.addEventListener('load', ()=>{ measure(); onScroll(); });
+} catch(e){ console.warn('logo morph', e); }
+
+/* ---- MOBILE PARALLAX (simulated via transform) ---- */
+try {
+  if (window.innerWidth < 769){
+    const sections = document.querySelectorAll('.parallax');
+    sections.forEach(sec=>{
+      const bg = sec.querySelector('.parallax-bg');
+      if (bg){ bg.classList.remove('hidden'); bg.style.display='block'; }
+    });
+    function mobParallax(){
+      const vh = window.innerHeight;
+      sections.forEach(sec=>{
+        const bg = sec.querySelector('.parallax-bg');
+        if (!bg) return;
+        const rect = sec.getBoundingClientRect();
+        const progress = (vh - rect.top) / (vh + rect.height);
+        const shift = (progress - 0.5) * 60;
+        bg.style.transform = `translateY(${shift}px)`;
+      });
+    }
+    window.addEventListener('scroll', mobParallax, { passive:true });
+    mobParallax();
+  }
+} catch(e){ console.warn('mob parallax', e); }
+
+/* ---- FORM -> WHATSAPP ---- */
+try {
+  const btn = document.getElementById('f_submit');
+  if (btn){
+    btn.addEventListener('click', ()=>{
+      const g = id => (document.getElementById(id)?.value || '').trim();
+      const L = window.__LANG || 'it';
+      const labels = L === 'en'
+        ? { intro:'Reservation request — Mangiafuoco', name:'Name', date:'Date', time:'Time', people:'Guests', notes:'Notes' }
+        : { intro:'Richiesta prenotazione — Mangiafuoco', name:'Nome', date:'Data', time:'Orario', people:'Persone', notes:'Note' };
+      const msg =
+        `${labels.intro}%0A` +
+        `${labels.name}: ${g('f_name')}%0A` +
+        `${labels.date}: ${g('f_date')}%0A` +
+        `${labels.time}: ${g('f_time')}%0A` +
+        `${labels.people}: ${g('f_people')}` +
+        (g('f_notes') ? `%0A${labels.notes}: ${g('f_notes')}` : '');
+      window.open('https://wa.me/393383308313?text=' + msg, '_blank');
+    });
+  }
+} catch(e){ console.warn('form', e); }
+
+/* ---- I18N ---- */
+try {
+  const I18N = {
+    it: {
+      nav_story:"Storia", nav_menu:"Menu", nav_reviews:"Recensioni", nav_contact:"Contatti",
+      cta_book_short:"Prenota", cta_menu:"Vedi il menu", cta_book:"Prenota un tavolo",
+      hero_eyebrow:"Braceria · Steakhouse · Bari",
+      hero_title:"Bontà in carne ed ossa",
+      hero_sub:"La casa del fuoco buono. Carni locali cotte rigorosamente su brace a carboni.",
+      hero_rating:"Travellers' Choice · 509 recensioni",
+      px1_eyebrow:"La brace è protagonista", px1_title:"Cottura sul carbone",
+      px1_sub:"Ogni taglio rispettato alla perfezione, come vuole la tradizione.",
+      story_eyebrow:"La storia", story_title:"Non la classica braceria",
+      story_p1:"Mangiafuoco è la casa del fuoco buono e della convivialità sincera, nata dalla passione di Donato e Angela Attolico. Una famiglia nel mondo delle carni fin dagli anni '50, quando erano macellai.",
+      story_p2:"Carni locali eccellenti cotte rigorosamente su brace a carboni, antipasti e contorni sempre freschi — mai semilavorati o surgelati — e un'incredibile selezione di vini, grappe e rum, in un ambiente caldo e accogliente.",
+      px2_eyebrow:"Selezione & frollatura", px2_title:"Carni d'eccellenza",
+      px2_sub:"Dalla Rubia Gallega al Wagyu A5, fino alle frollature Leonardo Attolica.",
+      menu_eyebrow:"Il menu", menu_title:"Dalla brace alla tavola",
+      cat_crudo:"Antipasto crudo", cat_antipasti:"Antipasti", cat_polpette:"Polpette special",
+      cat_carne:"Piatti di carne", cat_special:"Specialità · su ordinazione", cat_dolci:"Dolci",
+      cat_frollatura:"Selezioni Leonardo Attolica · frollatura min. 90gg",
+      frollatura_list:"Chianina · Danese · Prussiana · Simmenthal · Angus USA — € 7 all'etto",
+      menu_full:"Scopri il menu completo",
+      rev_title:"Le recensioni",
+      rev1:"\"Carne di altissimo livello, locale intimo e riservato. La cottura è rispettata alla perfezione e la carta dei vini è davvero ampia. Per chi cerca qualità, è il posto giusto.\"",
+      rev2:"\"La tartare Mangiafuoco è stata indimenticabile e la Fiorentina fantastica. Antipasti di carne cruda eccellenti. Torneremo sicuramente.\"",
+      rev3:"\"Molto più di una braceria: è davvero la casa del fuoco buono. Ogni dettaglio racconta cura e passione, con la brace assoluta protagonista.\"",
+      rev4:"\"Ottima qualità delle carni, cottura e presentazione curate. Location intima e accogliente: consiglio gli straccetti.\"",
+      rev5:"\"Il posto giusto per trovare carne sopraffina. Personale cordiale e professionale, titolare sempre disponibile.\"",
+      rev_score:"198 recensioni su TheFork",
+      contact_eyebrow:"Vieni a trovarci", contact_title:"Prenota un tavolo",
+      hours:"Lunedì–Sabato · 20:00–00:45", hours_closed:"Domenica chiuso",
+      btn_call:"Chiama ora",
+      form_title:"Richiedi la tua prenotazione", form_name:"Nome", form_date:"Data", form_time:"Orario",
+      form_people:"Persone", form_notes:"Note", form_submit:"Prenota ora",
+      form_hint:"La richiesta si aprirà su WhatsApp per la conferma."
+    },
+    en: {
+      nav_story:"Our story", nav_menu:"Menu", nav_reviews:"Reviews", nav_contact:"Contact",
+      cta_book_short:"Book", cta_menu:"See the menu", cta_book:"Book a table",
+      hero_eyebrow:"Steakhouse · Grill · Bari",
+      hero_title:"Goodness in flesh and bone",
+      hero_sub:"The home of good fire. Local meats grilled strictly over charcoal embers.",
+      hero_rating:"Travellers' Choice · 509 reviews",
+      px1_eyebrow:"The embers take centre stage", px1_title:"Grilled over charcoal",
+      px1_sub:"Every cut cooked to perfection, the way tradition demands.",
+      story_eyebrow:"Our story", story_title:"Not your usual grill house",
+      story_p1:"Mangiafuoco is the home of good fire and honest conviviality, born from the passion of Donato and Angela Attolico. A family in the world of meat since the 1950s, when they were butchers.",
+      story_p2:"Excellent local meats grilled strictly over charcoal, always-fresh starters and sides — never processed or frozen — and an incredible selection of wines, grappas and rums, in a warm and welcoming setting.",
+      px2_eyebrow:"Selection & dry-ageing", px2_title:"Meats of excellence",
+      px2_sub:"From Rubia Gallega to Wagyu A5, to the Leonardo Attolica dry-aged cuts.",
+      menu_eyebrow:"The menu", menu_title:"From the fire to your table",
+      cat_crudo:"Raw starters", cat_antipasti:"Starters", cat_polpette:"Special meatballs",
+      cat_carne:"Meat dishes", cat_special:"Specials · to order", cat_dolci:"Desserts",
+      cat_frollatura:"Leonardo Attolica selections · dry-aged 90+ days",
+      frollatura_list:"Chianina · Danish · Prussian · Simmenthal · USA Angus — € 7 per 100g",
+      menu_full:"See the full menu",
+      rev_title:"Reviews",
+      rev1:"\"Top-quality meat, an intimate and private venue. The cooking is spot on and the wine list is truly wide. If you're after quality, this is the place.\"",
+      rev2:"\"The Mangiafuoco tartare was unforgettable and the Fiorentina fantastic. Excellent raw-meat starters. We'll definitely be back.\"",
+      rev3:"\"Far more than a grill house: it really is the home of good fire. Every detail speaks of care and passion, with the embers the absolute star.\"",
+      rev4:"\"Great meat quality, careful cooking and presentation. Intimate, welcoming location — I recommend the straccetti.\"",
+      rev5:"\"The right place for superb meat. Friendly, professional staff and an ever-present owner.\"",
+      rev_score:"198 reviews on TheFork",
+      contact_eyebrow:"Come and see us", contact_title:"Book a table",
+      hours:"Monday–Saturday · 8:00pm–00:45", hours_closed:"Closed on Sunday",
+      btn_call:"Call now",
+      form_title:"Request your reservation", form_name:"Name", form_date:"Date", form_time:"Time",
+      form_people:"Guests", form_notes:"Notes", form_submit:"Book now",
+      form_hint:"Your request will open in WhatsApp for confirmation."
+    }
+  };
+
+  window.__LANG = 'it';
+  function setLang(lang){
+    const dict = I18N[lang]; if (!dict) return;
+    window.__LANG = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const k = el.getAttribute('data-i18n');
+      if (dict[k] != null) el.innerHTML = dict[k];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b=>{
+      const on = b.getAttribute('data-lang') === lang;
+      b.classList.toggle('bg-ink', on);
+      b.classList.toggle('text-cream', on);
+    });
+  }
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.addEventListener('click', ()=> setLang(b.getAttribute('data-lang')));
+  });
+  setLang('it');
+} catch(e){ console.warn('i18n', e); }
+</script>
+</body>
+</html>
