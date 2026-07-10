@@ -61,8 +61,8 @@
     white-space:nowrap; font-size:64px;
   }
   @media (max-width:640px){
-    #brandLogo{ height:42px; left:8px; top:5px; }
-    #brandLogoText{ font-size:16px; }
+    #brandLogo{ height:52px; left:8px; top:3px; }
+    #brandLogoText{ font-size:18px; }
   }
 
   /* ---- HEADER ---- */
@@ -170,7 +170,7 @@
 <!-- ============ HERO ============ -->
 <section id="top" class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center px-6">
   <!-- lo spazio in alto ospita il logo (fixed) nella sua posizione hero -->
-  <div class="mt-[10vh] sm:mt-[26vh]"></div>
+  <div class="mt-[8vh] sm:mt-[26vh]"></div>
 
 
   <h1 class="font-hero text-cream text-2xl sm:text-5xl md:text-7xl leading-[0.95] mb-6 sm:mb-8" data-i18n="hero_title">Bontà in carne ed ossa</h1>
@@ -584,7 +584,7 @@ try {
   function measure(){
     heroW = logo.offsetWidth || 200;
     const heroH = logo.offsetHeight || 180;
-    const headerH = isMob() ? 22 : 56;
+    const headerH = isMob() ? 28 : 56;
     headerScale = headerH / heroH;
   }
 
@@ -594,9 +594,9 @@ try {
     const p = clamp(y / END, 0, 1);
 
     const anchorX = isMob() ? 8 : 22;
-    const anchorY = isMob() ? 5 : 15;
+    const anchorY = isMob() ? 3 : 15;
     const heroTx = (window.innerWidth - heroW)/2 - anchorX;
-    const heroTy = window.innerHeight * (isMob() ? 0.18 : 0.22) - anchorY;
+    const heroTy = window.innerHeight * (isMob() ? 0.14 : 0.22) - anchorY;
 
     const tx = lerp(heroTx, 0, p);
     const ty = lerp(heroTy, 0, p);
